@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Filip Sterling — Marketing Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Departure+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #FFE000;
+    --yellow-dim: #CDB800;
+    --yellow-pale: #FFF5A0;
+    --black: #0A0A0A;
+    --dark: #111111;
+    --darker: #181818;
+    --card: #1A1A1A;
+    --border: #2A2A2A;
+    --text: #F0F0F0;
+    --muted: #888888;
+    --pixel: 4px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Departure Mono', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── PIXEL SCANLINES OVERLAY ── */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--black);
+    border-bottom: 2px solid var(--yellow);
+    padding: 0 2rem;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    image-rendering: pixelated;
+  }
+
+  .nav-logo {
+    color: var(--yellow);
+    font-size: 16px;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--text); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    transition: color 0.1s;
+    text-transform: uppercase;
+  }
+
+  .nav-links a:hover { color: var(--yellow); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    padding-top: 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* pixel grid bg */
+  #hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: 0.35;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 5rem;
+    padding: 2rem;
+    max-width: 1100px;
+    width: 100%;
+  }
+
+  .hero-text { flex: 1; }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    color: var(--yellow);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .hero-name {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    color: var(--yellow);
+    line-height: 1.05;
+    margin-bottom: 0.5rem;
+    text-shadow: 4px 4px 0 rgba(255,224,0,0.15);
+  }
+
+  .hero-title {
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    color: var(--text);
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--yellow);
+    padding-left: 1rem;
+    line-height: 1.9;
+  }
+
+  .hero-cta {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--black);
+    padding: 12px 28px;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: transform 0.1s, box-shadow 0.1s;
+    box-shadow: 4px 4px 0 var(--yellow-dim);
+    image-rendering: pixelated;
+  }
+
+  .hero-cta:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--yellow-dim);
+  }
+
+  /* ── PIXEL ART CHARACTER ── */
+  .pixel-art-wrap {
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .pixel-art-wrap canvas {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
+  /* floating label */
+  .pixel-label {
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: var(--yellow);
+    letter-spacing: 0.15em;
+    white-space: nowrap;
+    opacity: 0.6;
+  }
+
+  /* ── SECTION BASE ── */
+  section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+  }
+
+  .section-label {
+    font-size: 10px;
+    color: var(--yellow);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--yellow);
+  }
+
+  h2 {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    color: var(--text);
+    margin-bottom: 3rem;
+    line-height: 1.2;
+  }
+
+  h2 span { color: var(--yellow); }
+
+  .divider {
+    border: none;
+    border-top: 2px solid var(--border);
+    margin: 0 2rem;
+  }
+
+  /* ── ABOUT ── */
+  #about .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .bio-text {
+    font-size: 15px;
+    line-height: 1.9;
+    color: #D0D0D0;
+    border-left: 2px solid var(--border);
+    padding-left: 1.5rem;
+  }
+
+  .bio-text p { margin-bottom: 1rem; }
+  .bio-text p:last-child { margin-bottom: 0; }
+
+  /* ── SKILLS ── */
+  .skills-wrap { display: flex; flex-direction: column; gap: 1rem; }
+
+  .skill-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .skill-item:hover {
+    border-color: var(--yellow);
+    background: rgba(255,224,0,0.04);
+  }
+
+  .skill-icon {
+    width: 20px; height: 20px;
+    flex-shrink: 0;
+    image-rendering: pixelated;
+  }
+
+  .skill-name { flex: 1; font-size: 13px; color: var(--text); }
+
+  .skill-tag {
+    font-size: 10px;
+    color: var(--yellow);
+    letter-spacing: 0.1em;
+    opacity: 0.7;
+  }
+
+  /* ── PROJECTS ── */
+  #projects .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    transition: border-color 0.15s, transform 0.15s;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .project-card:hover {
+    border-color: var(--yellow);
+    transform: translate(-3px, -3px);
+    box-shadow: 3px 3px 0 var(--yellow);
+  }
+
+  .project-thumb {
+    width: 100%;
+    height: 160px;
+    background: var(--darker);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-thumb canvas {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
+  .project-type-badge {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: var(--yellow);
+    color: var(--black);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+  }
+
+  .project-body { padding: 1.25rem; }
+
+  .project-title {
+    font-size: 15px;
+    color: var(--yellow);
+    margin-bottom: 0.4rem;
+  }
+
+  .project-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .project-link {
+    font-size: 11px;
+    color: var(--text);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  /* ── CONTACT ── */
+  #contact .contact-box {
+    background: var(--card);
+    border: 1px solid var(--yellow);
+    padding: 3rem;
+    max-width: 600px;
+    box-shadow: 6px 6px 0 rgba(255,224,0,0.1);
+  }
+
+  .contact-box p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 2rem;
+    line-height: 1.8;
+  }
+
+  .contact-links { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.1s;
+  }
+
+  .contact-link:hover {
+    border-color: var(--yellow);
+    color: var(--yellow);
+    background: rgba(255,224,0,0.04);
+  }
+
+  .contact-link-icon { color: var(--yellow); font-size: 16px; width: 20px; text-align: center; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 2px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  footer span { color: var(--yellow); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  .cursor::after { content: '_'; animation: blink 1s step-end infinite; color: var(--yellow); }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+  .pixel-art-wrap { animation: float 4s ease-in-out infinite; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .hero-inner { flex-direction: column; text-align: center; gap: 3rem; }
+    .hero-title { border-left: none; border-top: 4px solid var(--yellow); padding-left: 0; padding-top: 0.75rem; }
+    #about .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .nav-links { display: none; }
+    #contact .contact-box { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero">Filip<span>.Sterking</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow">// heyyyyy</div>
+      <h1 class="hero-name">Filip<br>Sterling</h1>
+      <div class="hero-title">
+        <span style="color:var(--yellow)">All around marketing.</span>
+      </div>
+      <a href="#projects" class="hero-cta">View My Work</a>
+    </div>
+    <div class="pixel-art-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" width="160" height="170" viewBox="0 0 160 170" style="image-rendering:pixelated;display:block;"><rect x="50" y="0" width="10" height="10" fill="#3B2506"/><rect x="60" y="0" width="10" height="10" fill="#3B2506"/><rect x="70" y="0" width="10" height="10" fill="#3B2506"/><rect x="80" y="0" width="10" height="10" fill="#3B2506"/><rect x="90" y="0" width="10" height="10" fill="#3B2506"/><rect x="100" y="0" width="10" height="10" fill="#3B2506"/><rect x="40" y="10" width="10" height="10" fill="#3B2506"/><rect x="50" y="10" width="10" height="10" fill="#FBBF77"/><rect x="60" y="10" width="10" height="10" fill="#FBBF77"/><rect x="70" y="10" width="10" height="10" fill="#FBBF77"/><rect x="80" y="10" width="10" height="10" fill="#FBBF77"/><rect x="90" y="10" width="10" height="10" fill="#FBBF77"/><rect x="100" y="10" width="10" height="10" fill="#FBBF77"/><rect x="110" y="10" width="10" height="10" fill="#3B2506"/><rect x="40" y="20" width="10" height="10" fill="#3B2506"/><rect x="50" y="20" width="10" height="10" fill="#FBBF77"/><rect x="60" y="20" width="10" height="10" fill="#FBBF77"/><rect x="70" y="20" width="10" height="10" fill="#FBBF77"/><rect x="80" y="20" width="10" height="10" fill="#FBBF77"/><rect x="90" y="20" width="10" height="10" fill="#FBBF77"/><rect x="100" y="20" width="10" height="10" fill="#FBBF77"/><rect x="110" y="20" width="10" height="10" fill="#3B2506"/><rect x="40" y="30" width="10" height="10" fill="#3B2506"/><rect x="50" y="30" width="10" height="10" fill="#FBBF77"/><rect x="60" y="30" width="10" height="10" fill="#FBBF77"/><rect x="70" y="30" width="10" height="10" fill="#FBBF77"/><rect x="80" y="30" width="10" height="10" fill="#FBBF77"/><rect x="90" y="30" width="10" height="10" fill="#FBBF77"/><rect x="100" y="30" width="10" height="10" fill="#FBBF77"/><rect x="110" y="30" width="10" height="10" fill="#3B2506"/><rect x="50" y="40" width="10" height="10" fill="#3B2506"/><rect x="60" y="40" width="10" height="10" fill="#3B2506"/><rect x="70" y="40" width="10" height="10" fill="#3B2506"/><rect x="80" y="40" width="10" height="10" fill="#3B2506"/><rect x="90" y="40" width="10" height="10" fill="#3B2506"/><rect x="100" y="40" width="10" height="10" fill="#3B2506"/><rect x="40" y="50" width="10" height="10" fill="#FBBF77"/><rect x="50" y="50" width="10" height="10" fill="#FBBF77"/><rect x="60" y="50" width="10" height="10" fill="#FBBF77"/><rect x="70" y="50" width="10" height="10" fill="#FBBF77"/><rect x="80" y="50" width="10" height="10" fill="#FBBF77"/><rect x="90" y="50" width="10" height="10" fill="#FBBF77"/><rect x="100" y="50" width="10" height="10" fill="#FBBF77"/><rect x="110" y="50" width="10" height="10" fill="#FBBF77"/><rect x="120" y="50" width="10" height="10" fill="#FBBF77"/><rect x="30" y="60" width="10" height="10" fill="#252525"/><rect x="40" y="60" width="10" height="10" fill="#252525"/><rect x="50" y="60" width="10" height="10" fill="#EEEEEE"/><rect x="60" y="60" width="10" height="10" fill="#EEEEEE"/><rect x="70" y="60" width="10" height="10" fill="#EEEEEE"/><rect x="80" y="60" width="10" height="10" fill="#EEEEEE"/><rect x="90" y="60" width="10" height="10" fill="#EEEEEE"/><rect x="100" y="60" width="10" height="10" fill="#EEEEEE"/><rect x="110" y="60" width="10" height="10" fill="#252525"/><rect x="120" y="60" width="10" height="10" fill="#252525"/><rect x="30" y="70" width="10" height="10" fill="#252525"/><rect x="40" y="70" width="10" height="10" fill="#EEEEEE"/><rect x="50" y="70" width="10" height="10" fill="#FFE000"/><rect x="60" y="70" width="10" height="10" fill="#FFE000"/><rect x="70" y="70" width="10" height="10" fill="#FFE000"/><rect x="80" y="70" width="10" height="10" fill="#AA9000"/><rect x="90" y="70" width="10" height="10" fill="#AA9000"/><rect x="100" y="70" width="10" height="10" fill="#FFE000"/><rect x="110" y="70" width="10" height="10" fill="#EEEEEE"/><rect x="120" y="70" width="10" height="10" fill="#252525"/><rect x="30" y="80" width="10" height="10" fill="#252525"/><rect x="40" y="80" width="10" height="10" fill="#252525"/><rect x="50" y="80" width="10" height="10" fill="#252525"/><rect x="60" y="80" width="10" height="10" fill="#EEEEEE"/><rect x="70" y="80" width="10" height="10" fill="#FFE000"/><rect x="80" y="80" width="10" height="10" fill="#FFE000"/><rect x="90" y="80" width="10" height="10" fill="#EEEEEE"/><rect x="100" y="80" width="10" height="10" fill="#252525"/><rect x="110" y="80" width="10" height="10" fill="#252525"/><rect x="30" y="90" width="10" height="10" fill="#252525"/><rect x="40" y="90" width="10" height="10" fill="#252525"/><rect x="50" y="90" width="10" height="10" fill="#252525"/><rect x="60" y="90" width="10" height="10" fill="#252525"/><rect x="70" y="90" width="10" height="10" fill="#252525"/><rect x="80" y="90" width="10" height="10" fill="#252525"/><rect x="90" y="90" width="10" height="10" fill="#252525"/><rect x="100" y="90" width="10" height="10" fill="#252525"/><rect x="110" y="90" width="10" height="10" fill="#252525"/><rect x="120" y="90" width="10" height="10" fill="#252525"/><rect x="30" y="100" width="10" height="10" fill="#252525"/><rect x="40" y="100" width="10" height="10" fill="#252525"/><rect x="50" y="100" width="10" height="10" fill="#252525"/><rect x="60" y="100" width="10" height="10" fill="#252525"/><rect x="70" y="100" width="10" height="10" fill="#252525"/><rect x="80" y="100" width="10" height="10" fill="#252525"/><rect x="90" y="100" width="10" height="10" fill="#252525"/><rect x="100" y="100" width="10" height="10" fill="#252525"/><rect x="110" y="100" width="10" height="10" fill="#252525"/><rect x="120" y="100" width="10" height="10" fill="#252525"/><rect x="30" y="110" width="10" height="10" fill="#252525"/><rect x="40" y="110" width="10" height="10" fill="#252525"/><rect x="50" y="110" width="10" height="10" fill="#252525"/><rect x="60" y="110" width="10" height="10" fill="#252525"/><rect x="70" y="110" width="10" height="10" fill="#252525"/><rect x="80" y="110" width="10" height="10" fill="#252525"/><rect x="90" y="110" width="10" height="10" fill="#252525"/><rect x="100" y="110" width="10" height="10" fill="#252525"/><rect x="110" y="110" width="10" height="10" fill="#252525"/><rect x="120" y="110" width="10" height="10" fill="#252525"/><rect x="30" y="120" width="10" height="10" fill="#252525"/><rect x="40" y="120" width="10" height="10" fill="#252525"/><rect x="50" y="120" width="10" height="10" fill="#252525"/><rect x="60" y="120" width="10" height="10" fill="#252525"/><rect x="70" y="120" width="10" height="10" fill="#252525"/><rect x="80" y="120" width="10" height="10" fill="#252525"/><rect x="90" y="120" width="10" height="10" fill="#252525"/><rect x="100" y="120" width="10" height="10" fill="#252525"/><rect x="110" y="120" width="10" height="10" fill="#252525"/><rect x="120" y="120" width="10" height="10" fill="#252525"/><rect x="40" y="130" width="10" height="10" fill="#333333"/><rect x="50" y="130" width="10" height="10" fill="#333333"/><rect x="60" y="130" width="10" height="10" fill="#333333"/><rect x="90" y="130" width="10" height="10" fill="#333333"/><rect x="100" y="130" width="10" height="10" fill="#333333"/><rect x="110" y="130" width="10" height="10" fill="#333333"/><rect x="40" y="140" width="10" height="10" fill="#333333"/><rect x="50" y="140" width="10" height="10" fill="#333333"/><rect x="60" y="140" width="10" height="10" fill="#333333"/><rect x="90" y="140" width="10" height="10" fill="#333333"/><rect x="100" y="140" width="10" height="10" fill="#333333"/><rect x="110" y="140" width="10" height="10" fill="#333333"/><rect x="40" y="150" width="10" height="10" fill="#333333"/><rect x="50" y="150" width="10" height="10" fill="#333333"/><rect x="60" y="150" width="10" height="10" fill="#333333"/><rect x="90" y="150" width="10" height="10" fill="#333333"/><rect x="100" y="150" width="10" height="10" fill="#333333"/><rect x="110" y="150" width="10" height="10" fill="#333333"/><rect x="40" y="160" width="10" height="10" fill="#555555"/><rect x="50" y="160" width="10" height="10" fill="#555555"/><rect x="60" y="160" width="10" height="10" fill="#555555"/><rect x="90" y="160" width="10" height="10" fill="#555555"/><rect x="100" y="160" width="10" height="10" fill="#555555"/><rect x="110" y="160" width="10" height="10" fill="#555555"/></svg>
+      <div class="pixel-label">// filip_sterling.exe</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">01 / about</div>
+  <h2>Who I <span>Am</span></h2>
+  <div class="about-grid">
+    <div class="bio-text">
+      <p>I'm a versatile Marketing Manager based in Bratislava, combining strategic campaign thinking with hands-on technical execution — from building and maintaining websites to running paid media and leading IT-adjacent projects.</p>
+      <p>With a background spanning digital analytics and cross-functional coordination, I bridge the gap between marketing vision and technical reality.</p>
+    </div>
+    <div>
+      <div class="section-label" style="margin-bottom:1rem">// quick facts</div>
+      <div style="display:flex;flex-direction:column;gap:0.5rem">
+        <div style="display:flex;gap:1rem;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:13px">
+          <span style="color:var(--yellow);min-width:120px">Location</span>
+          <span style="color:var(--muted)">Bratislava, Slovakia</span>
+        </div>
+        <div style="display:flex;gap:1rem;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:13px">
+          <span style="color:var(--yellow);min-width:120px">Role</span>
+          <span style="color:var(--muted)">Marketing Manager</span>
+        </div>
+        <div style="display:flex;gap:1rem;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:13px">
+          <span style="color:var(--yellow);min-width:120px">Focus</span>
+          <span style="color:var(--muted)">IT, Campaigns, Web</span>
+        </div>
+        <div style="display:flex;gap:1rem;padding:0.6rem 0;font-size:13px">
+          <span style="color:var(--yellow);min-width:120px">Domain</span>
+          <span style="color:var(--muted)">fsterbling.com</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">02 / skills</div>
+  <h2>What I <span>Do</span></h2>
+  <div class="skills-wrap">
+    <div class="skill-item">
+      <svg class="skill-icon" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="2" height="2" fill="#FFE000"/>
+        <rect x="4" y="1" width="2" height="2" fill="#FFE000"/>
+        <rect x="7" y="1" width="2" height="2" fill="#FFE000"/>
+        <rect x="1" y="4" width="8" height="2" fill="#CDB800"/>
+        <rect x="1" y="7" width="8" height="2" fill="#FFE000"/>
+      </svg>
+      <span class="skill-name">Paid Campaigns - Google Ads, Meta, LinkedIn</span>
+      <span class="skill-tag">MEDIA</span>
+    </div>
+    <div class="skill-item">
+      <svg class="skill-icon" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="2" width="6" height="6" fill="#FFE000"/>
+        <rect x="4" y="0" width="6" height="6" fill="#CDB800"/>
+        <rect x="4" y="2" width="4" height="4" fill="#FFE000"/>
+      </svg>
+      <span class="skill-name">Website Maintenance &amp; Development</span>
+      <span class="skill-tag">WEB</span>
+    </div>
+    <div class="skill-item">
+      <svg class="skill-icon" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="5" width="2" height="4" fill="#CDB800"/>
+        <rect x="4" y="3" width="2" height="6" fill="#FFE000"/>
+        <rect x="7" y="1" width="2" height="8" fill="#CDB800"/>
+      </svg>
+      <span class="skill-name">Analytics &amp; Performance Tracking</span>
+      <span class="skill-tag">DATA</span>
+    </div>
+    <div class="skill-item">
+      <svg class="skill-icon" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="8" height="2" fill="#FFE000"/>
+        <rect x="1" y="4" width="5" height="2" fill="#CDB800"/>
+        <rect x="1" y="7" width="7" height="2" fill="#FFE000"/>
+      </svg>
+      <span class="skill-name">Content Strategy &amp; Copywriting</span>
+      <span class="skill-tag">CONTENT</span>
+    </div>
+    <div class="skill-item">
+      <svg class="skill-icon" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="0" width="2" height="4" fill="#FFE000"/>
+        <rect x="0" y="6" width="4" height="2" fill="#CDB800"/>
+        <rect x="6" y="6" width="4" height="2" fill="#CDB800"/>
+        <rect x="2" y="4" width="2" height="2" fill="#FFE000"/>
+        <rect x="6" y="4" width="2" height="2" fill="#FFE000"/>
+      </svg>
+      <span class="skill-name">IT Project Management &amp; Coordination</span>
+      <span class="skill-tag">PM</span>
+    </div>
+    <div class="skill-item">
+      <svg class="skill-icon" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="1" width="6" height="4" fill="#FFE000"/>
+        <rect x="0" y="6" width="10" height="3" fill="#CDB800"/>
+        <rect x="4" y="5" width="2" height="2" fill="#888"/>
+      </svg>
+      <span class="skill-name">Presentations &amp; Public Speaking</span>
+      <span class="skill-tag">COMM</span>
+    </div>
+    <div class="skill-item">
+      <svg class="skill-icon" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="3" width="8" height="5" fill="#FFE000"/>
+        <rect x="3" y="1" width="4" height="2" fill="#CDB800"/>
+        <rect x="3" y="5" width="4" height="1" fill="#0A0A0A"/>
+      </svg>
+      <span class="skill-name">Ideas, Concepts &amp; Creative Direction</span>
+      <span class="skill-tag">IDEAS</span>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">03 / work</div>
+  <h2>Selected <span>Projects</span></h2>
+  <div class="projects-grid">
+
+    <!-- Video card 1 -->
+    <a href="https://www.youtube.com/watch?v=tpf3m80Wx0o" class="project-card">
+      <div class="project-thumb">
+        <canvas id="thumb1" width="120" height="90"></canvas>
+        <div class="project-type-badge">VIDEO</div>
+      </div>
+      <div class="project-body">
+        <div class="project-title">Conference Talk: Bezpečný krok vpred - VPN ako pilier bezpečnosti</div>
+        <div class="project-desc">Presentation from [Event Name, Year]. Topics: marketing strategy, digital transformation, or IT trends.</div>
+        <div class="project-link">▶ Watch on YouTube →</div>
+      </div>
+    </a>
+
+    <!-- Article card -->
+    <a href="https://pantheon.tech/blog-news/what-is-lag-mlag/" class="project-card">
+      <div class="project-thumb">
+        <canvas id="thumb3" width="120" height="90"></canvas>
+        <div class="project-type-badge">ARTICLE</div>
+      </div>
+      <div class="project-body">
+        <div class="project-title">What is LAG & MLAG</div>
+        <div class="project-desc">Published on pantheon.tech. A deep-dive into a beautiful piece of tech.</div>
+        <div class="project-link">// Read Article →</div>
+      </div>
+    </a>
+
+    <!-- Document card -->
+    <a href="https://utheses.univie.ac.at/detail/62483" class="project-card">
+      <div class="project-thumb">
+        <canvas id="thumb4" width="120" height="90"></canvas>
+        <div class="project-type-badge">DOCUMENT</div>
+      </div>
+      <div class="project-body">
+        <div class="project-title">Ethical digital advertising in 2021 & beyond</div>
+        <div class="project-desc">My master thesis for the University of Vienna, which was part of my successful MA title in Journalism & Communication Studies.</div>
+        <div class="project-link">// Open Document →</div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">04 / contact</div>
+  <h2>Get In <span>Touch</span></h2>
+  <div class="contact-box">
+    <p>Drop me a line — I usually respond within 24 hours.</p>
+    <div class="contact-links">
+      <a href="https://www.linkedin.com/in/filip-sterling/" class="contact-link" target="_blank" rel="noopener">
+        <span class="contact-link-icon" style="font-size:12px">in</span>
+        linkedin.com/in/filipsterling
+      </a>
+      <a href="https://fsterbling.com" class="contact-link" target="_blank" rel="noopener">
+        <span class="contact-link-icon">#</span>
+        fsterling.com
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  &copy; 2038 <span>Filip Sterling</span> — built with pixels &amp; purpose
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function drawPixelArt(canvas, art, palette, scale) {
+  const ctx = canvas.getContext('2d');
+  const cols = art[0].length;
+  const rows = art.length;
+  canvas.width = cols * scale;
+  canvas.height = rows * scale;
+  ctx.imageSmoothingEnabled = false;
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const key = art[r][c];
+      if (key === ' ') continue;
+      ctx.fillStyle = palette[key] || '#fff';
+      ctx.fillRect(c * scale, r * scale, scale, scale);
+    }
+  }
+}
+
+// pixel art rendered as inline SVG
+
+// ── THUMB 1: play button / video ──
+const videoArt = [
+  "BBBBBBBBBBBBB",
+  "B           B",
+  "B   YYYY    B",
+  "B  YYYYYYY  B",
+  "B YYYYYYYYY B",
+  "B  YYYYYYY  B",
+  "B   YYYY    B",
+  "B           B",
+  "BBBBBBBBBBBBB",
+];
+const videoPalette = { B: '#222', Y: '#FFE000', ' ': '' };
+drawPixelArt(document.getElementById('thumb1'), videoArt, videoPalette, 10);
+drawPixelArt(document.getElementById('thumb2'), videoArt, videoPalette, 10);
+
+// ── THUMB 3: article / text doc ──
+const articleArt = [
+  "BBBBBBBBBBB  ",
+  "BWWWWWWWWWB  ",
+  "BWYYYYWWWWB  ",
+  "BWWWWWWWWWB  ",
+  "BWYYYYYYYWB  ",
+  "BWWWWWWWWWB  ",
+  "BWYYYYYWWWB  ",
+  "BWWWWWWWWWB  ",
+  "BBBBBBBBBBB  ",
+];
+const articlePalette = { B: '#222', W: '#2A2A2A', Y: '#FFE000', ' ': '' };
+drawPixelArt(document.getElementById('thumb3'), articleArt, articlePalette, 10);
+
+// ── THUMB 4: document ──
+const docArt = [
+  "  BBBBBBBBB  ",
+  "  BWWWWWWWB  ",
+  "  BWYYYWYBB  ",
+  "  BWWWWWWBB  ",
+  "  BWYYWWWBB  ",
+  "  BWWWWWWBB  ",
+  "  BWYYYYWBB  ",
+  "  BWWWWWWBB  ",
+  "  BBBBBBBBB  ",
+];
+drawPixelArt(document.getElementById('thumb4'), docArt, articlePalette, 10);
+
+// ── TYPING EFFECT on hero title ──
+const titles = [
+  "Marketing Manager",
+  "Campaign Architect",
+  "Web Builder",
+  "Project Driver",
+  "Ideas Person",
+];
+let ti = 0, ci = 0, deleting = false;
+const el = document.querySelector('.hero-name');
+
+// scroll-reveal: simple fade-in on elements entering viewport
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('section, .project-card, .skill-item').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 
